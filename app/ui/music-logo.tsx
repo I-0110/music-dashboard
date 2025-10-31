@@ -1,7 +1,7 @@
 import { MusicalNoteIcon, PlayCircleIcon } from '@heroicons/react/24/outline';
 import { teachers } from '@/app/ui/fonts';
 
-export default function AcmeLogo() {
+export default function MusicLogo() {
   return (
     <div
       className={`${teachers.className} flex flex-row items-center leading-none text-white`}
