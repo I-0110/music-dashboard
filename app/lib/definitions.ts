@@ -114,9 +114,20 @@ export type Level = {
   name: string[];
 }
 
+export type LatestVideos = {
+  videos_id: string;
+  name: string;
+  videos_url: string;
+  category_id: string;
+  month_id: string;
+  level_id: string;
+}
+
 export type VideosTable = {
   videos_id: string;
   name: string;
+  videos_url: string;
+  date: string;
   category_id: string;
   month_id: string;
   level_id: string;

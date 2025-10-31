@@ -4,6 +4,7 @@ import {
   Category,
   Month, 
   Level, 
+  LatestVideos,
   VideosTable, 
   VideoForm 
 } from './definitions';
@@ -23,7 +24,7 @@ export async function fetchVideos() {
 
 export async function fetchLatestVideos() {
   try {
-    const data = await sql<Videos[]>`SELECT videos.status FROM videos`;
+    const data = await sql<LatestVideos[]>`SELECT videos.date FROM videos`;
 
     return data;
   } catch (error) {
@@ -32,7 +33,73 @@ export async function fetchLatestVideos() {
   }
 }
 
+export async function fetchCardData() {
+  try {
+    // You can probably combine these into a single SQL query
+    // However, we are intentionally splitting them to demonstrate
+    // how to initialize multiple queries in parallel with JS.
+    const videoCountPromise = sql`SELECT COUNT(*) FROM videos`;
+    const videoStatusPromise = sql`SELECT
+         SUM(CASE WHEN status = 'published' THEN amount ELSE 0 END) AS "published",
+         SUM(CASE WHEN status = 'draft' THEN amount ELSE 0 END) AS "draft"
+         FROM videos`;
+
+    const data = await Promise.all([
+      videoCountPromise,
+      videoStatusPromise,
+    ]);
+
+    const numberOfVideos = Number(data[0][0].count ?? '0');
+    const totalPublishedVideos = Number(data[0][0].published ?? '0');
+    const totalDraftVideos = Number(data[0][0].draft ?? '0');
+
+    return {
+      numberOfVideos,
+      totalPublishedVideos,
+      totalDraftVideos,
+    };
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch card data.');
+  }
+}
+
 const ITEMS_PER_PAGE = 5;
+
+export async function fetchFilteredVideos(
+  query: string,
+  currentPage: number,
+) {
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const videos = await sql<VideosTable[]>`
+      SELECT
+        videos.id,
+        videos.name,
+        videos.url,
+        videos.date,
+        videos.category_id,
+        videos.month_id,
+        videos.level_id,
+        videos.status
+      FROM videos
+      JOIN month ON videos.month_id = months.id
+      WHERE
+        months.name ILIKE ${`%${query}%`} OR
+        videos.date::text ILIKE ${`%${query}%`} OR
+        videos.status ILIKE ${`%${query}%`}
+      ORDER BY videos.date DESC
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+    `;
+
+    return videos;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch invoices.');
+  }
+}
+
 export async function fetchFilteredByMonth(
   query: string,
   currentPage: number
