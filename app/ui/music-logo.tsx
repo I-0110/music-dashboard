@@ -6,9 +6,9 @@ export default function MusicLogo() {
     <div
       className={`${teachers.className} flex flex-row items-center leading-none text-white`}
     >
-      <PlayCircleIcon className="h-12 w-12 rotate-[15deg]" />
+      <PlayCircleIcon className="h-12 w-12" />
       <p className="text-[44px]">Music Time!</p>
-      <MusicalNoteIcon className='h-12 w-12 rotate-[15deg]' />
+      <MusicalNoteIcon className='h-12 w-12 rotate-[-2deg]' />
     </div>
   );
 }
