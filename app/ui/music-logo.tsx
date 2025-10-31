@@ -4,11 +4,11 @@ import { teachers } from '@/app/ui/fonts';
 export default function MusicLogo() {
   return (
     <div
-      className={`${teachers.className} flex flex-row items-center leading-none text-white`}
+      className={`${teachers.className} flex flex-row items-center leading-none text-white mb-y-[-16px]`}
     >
-      <PlayCircleIcon className="h-12 w-12" />
-      <p className="text-[40px]">Music Time!</p>
-      <MusicalNoteIcon className='h-12 w-12 rotate-[-2deg]' />
+      <PlayCircleIcon className="h-15 w-15" />
+      <p className="text-2xl">Music Time!</p>
+      <MusicalNoteIcon className='h-15 w-15 rotate-[-2deg]' />
     </div>
   );
 }
