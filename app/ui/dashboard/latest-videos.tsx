@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { teachers } from '@/app/ui/fonts';
 import { LatestVideos } from '@/app/lib/definitions';
 
-export default async function LatestVideos({
+export default async function Latest({
   latestVideos,
 }: {
   latestVideos: LatestVideos[];
